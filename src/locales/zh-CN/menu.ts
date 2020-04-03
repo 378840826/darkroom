@@ -1,8 +1,12 @@
 export default {
+  'menu.photoManage': '相册管理',
+  'menu.photoManage.photoList': '图片列表',
+  'menu.photoManage.photoUpload': '上传图片',
   'menu.blogManage': '博客管理',
   'menu.blogManage.articleList': '文章列表',
   'menu.blogManage.articleCreate': '文章发布',
   'menu.blog': '文章',
+  'menu.photo': '图片',
   'menu.accountcenter': '个人中心',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',

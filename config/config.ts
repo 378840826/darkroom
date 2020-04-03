@@ -64,6 +64,21 @@ export default {
       authority: ['admin'],
       routes: [
         {
+          path: '/admin',
+          redirect: '/admin/login',
+        },
+        {
+          path: '/admin/login',
+          component: '../layouts/UserLayout',
+          routes: [
+            {
+              name: 'login',
+              path: '/admin/login',
+              component: './user/login',
+            },
+          ],
+        },
+        {
           path: '/',
           component: '../layouts/BasicLayout',
           routes: [
@@ -71,6 +86,7 @@ export default {
               path: '/admin/blog',
               name: 'blogManage',
               icon: 'smile',
+              authority: ['admin'],
               routes: [
                 {
                   path: '/admin/blog',
@@ -91,16 +107,28 @@ export default {
               ],
             },
             {
-              path: '/admin/admin',
-              name: 'admin',
-              icon: 'crown',
-              component: './Admin',
-            },
-            {
-              name: 'accountcenter',
+              path: '/admin/photo',
+              name: 'photoManage',
               icon: 'smile',
-              path: '/admin/accountcenter',
-              component: './AccountCenter',
+              authority: ['admin'],
+              routes: [
+                {
+                  path: '/admin/photo',
+                  redirect: '/admin/photo/list',
+                },
+                {
+                  path: '/admin/photo/list',
+                  name: 'photoList',
+                  icon: 'smile',
+                  component: './admin/Photo/List',
+                },
+                {
+                  path: '/admin/photo/upload',
+                  name: 'photoUpload',
+                  icon: 'smile',
+                  component: './admin/Photo/Upload',
+                },
+              ],
             },
             {
               component: './404',
@@ -112,63 +140,38 @@ export default {
         },
       ],
     },
-    {
-      path: '/user',
-      component: '../layouts/UserLayout',
-      routes: [
-        {
-          name: 'login',
-          path: '/user/login',
-          component: './user/login',
-        },
-      ],
-    },
+    // 浏览页
     {
       path: '/',
-      component: '../layouts/SecurityLayout',
+      component: '../layouts/BlankLayout',
       routes: [
+        // 首页
         {
           path: '/',
           component: './Home',
         },
+        // 内容
         {
           path: '/',
-          component: '../layouts/BasicLayout',
-          // authority: ['admin', 'user'],
+          component: '../layouts/GuestLayout',
           routes: [
+            {
+              path: '/',
+              name: 'home',
+              icon: 'table',
+              component: './Home',
+            },
             {
               path: '/blog',
               name: 'blog',
-              icon: 'smile',
+              icon: 'table',
               component: './Blog',
             },
             {
-              name: 'accountcenter',
-              icon: 'smile',
-              path: '/accountcenter',
-              component: './AccountCenter',
-            },
-            {
-              path: '/admin',
-              name: 'admin',
-              icon: 'crown',
-              component: './Admin',
-              authority: ['admin'],
-              routes: [
-                {
-                  path: '/admin/sub-page',
-                  name: 'sub-page',
-                  icon: 'smile',
-                  component: './Welcome',
-                  authority: ['admin'],
-                },
-              ],
-            },
-            {
-              name: 'list.table-list',
+              path: '/photo',
+              name: 'photo',
               icon: 'table',
-              path: '/list',
-              component: './ListTableList',
+              component: './Photo',
             },
             {
               component: './404',

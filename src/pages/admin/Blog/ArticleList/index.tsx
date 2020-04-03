@@ -86,6 +86,7 @@ const BlogList: React.FC<BlogListProps> = () => {
       title: '发布时间',
       dataIndex: 'date',
       valueType: 'dateTime',
+      hideInSearch: true,
       sorter: true,
     },
     {

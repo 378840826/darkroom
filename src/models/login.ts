@@ -3,7 +3,7 @@ import { Effect } from 'dva';
 import { stringify } from 'querystring';
 import { router } from 'umi';
 
-import { fakeAccountLogin } from '@/services/login';
+import { accountLogin, accountLogout } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
@@ -34,12 +34,11 @@ const Model: LoginModelType = {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
+      const response = yield call(accountLogin, payload);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
       });
-      // Login successfully
       if (response.status === 'ok') {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
@@ -56,21 +55,16 @@ const Model: LoginModelType = {
             return;
           }
         }
-        router.replace(redirect || '/');
+        window.location.href = redirect || '/admin/blog';
       }
     },
 
     logout() {
-      const { redirect } = getPageQuery();
-      // Note: There may be security issues, please note
-      if (window.location.pathname !== '/user/login' && !redirect) {
-        router.replace({
-          pathname: '/user/login',
-          search: stringify({
-            redirect: window.location.href,
-          }),
-        });
-      }
+      accountLogout().then(res => {
+        if (res.status === 'ok') {
+          router.replace('/admin/login');
+        }
+      })
     },
   },
 

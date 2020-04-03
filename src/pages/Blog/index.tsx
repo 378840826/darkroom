@@ -14,6 +14,12 @@ interface ListProps {
   dispatch: Dispatch<AnyAction>;
 };
 
+interface classifyList {
+  code: Array<string>;
+  design: Array<string>;
+  essay: Array<string>;
+};
+
 class CatalogSider extends React.Component<ListProps> {
   // 一级菜单
   rootSubmenuKeys = ['sub1', 'sub2', 'sub3'];
@@ -43,9 +49,7 @@ class CatalogSider extends React.Component<ListProps> {
 
   render() {
     const { list } = this.props;
-    console.log('list', list);
-    
-    const classify = {
+    const classify: classifyList = {
       code: [],
       design: [],
       essay: [],
@@ -96,9 +100,6 @@ class Blog extends React.Component<BlogProps> {
     const { dispatch } = this.props;
     dispatch({
       type: 'blog/fetchList',
-      payload: {
-        pagination: 10086,
-      },
     });
     dispatch({
       type: 'blog/fetchArticle',

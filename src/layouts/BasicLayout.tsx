@@ -10,7 +10,7 @@ import ProLayout, {
   DefaultFooter,
 } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'umi';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
@@ -29,7 +29,7 @@ const noMatch = (
     subTitle="Sorry, you are not authorized to access this page."
     extra={
       <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+        <Link to="/admin/login">Go Login</Link>
       </Button>
     }
   />
@@ -120,20 +120,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       pathname: '/',
     },
   } = props;
-  /**
-   * constructor
-   */
-
-  useEffect(() => {
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-    }
-  }, []);
-  /**
-   * init variables
-   */
 
   const handleMenuCollapse = (payload: boolean): void => {
     if (dispatch) {
@@ -152,7 +138,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       logo={logo}
       formatMessage={formatMessage}
       menuHeaderRender={(logoDom, titleDom) => (
-        <Link to="/home">
+        <Link to="/">
           {logoDom}
           {titleDom}
         </Link>
