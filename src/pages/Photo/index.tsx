@@ -3,10 +3,24 @@ import { Card } from 'antd';
 import { connect } from 'dva';
 import { Dispatch, AnyAction } from 'redux';
 import { PhotoModelState } from '@/models/photo';
+import Zmage from 'react-zmage';
+
+interface PhotoInfo {
+  id: string;
+  title: string;
+  mimetype: string;
+  size: string;
+  classify: string;
+  date: number,
+  url: string;
+  minUrl: string;
+};
 
 interface PhotoProps {
   loading: boolean;
-  photo: any;
+  photo: {
+    list: Array<PhotoInfo>,
+  };
   dispatch: Dispatch<AnyAction>;
 };
 
@@ -18,20 +32,37 @@ class Photo extends React.Component<PhotoProps> {
     });
   };
 
-  callback = (key: any) => {
-    console.log(key);
+  handleCardClick = (imgInfo: PhotoInfo) => {
+    const { photo: { list } } = this.props;
+    const { classify } = imgInfo;
+    let defaultPage;
+    const set = list[classify].map((item: PhotoInfo, index: Number) => {
+      if (item.id === imgInfo.id) {
+        defaultPage = index;
+      }
+      return {
+        src: item.url,
+        alt: item.title,
+      }
+    })
+    Zmage.browsing({
+      set,
+      defaultPage,
+      controller: {
+        download: true,
+      },
+    })
   };
 
   render() {
     const { photo: { list }, loading } = this.props;
     const photoClassify = {};
-    list.forEach((photo: any) => {
+    list.forEach((photo: PhotoInfo) => {
       if (!photoClassify[photo.classify]) {
         photoClassify[photo.classify] = [];
       }
       photoClassify[photo.classify].push(photo)
     });
-    console.log('photoClassify', photoClassify);
     return (
       <>
         {
@@ -39,8 +70,8 @@ class Photo extends React.Component<PhotoProps> {
             return (
               <Card loading={loading} title={key} key={key}>
                 {
-                  photoClassify[key].map((imgInfo: any) => (
-                   <img src={imgInfo.minUrl} alt=""/>
+                  photoClassify[key].map((imgInfo: PhotoInfo) => (
+                    <img src={imgInfo.minUrl} alt={imgInfo.title} onClick={this.handleCardClick.bind(this, imgInfo)} />
                   ))
                 }
               </Card>

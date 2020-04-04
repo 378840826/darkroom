@@ -46,12 +46,12 @@ class UploadPhoto extends React.Component<any, UploadPhotoState> {
         }
         // 因后台图片压缩工具有问题，上传一份缩略图
         const imageCompressor = new ImageCompressor();
-        imageCompressor.compress(file, ImageCompressorOptions).then((result) => {
+        imageCompressor.compress(file, ImageCompressorOptions).then((result: any) => {
           const formData = new FormData();
           const minImgFile = new File([result], `min_${file.name}`, { type: file.type });
           formData.append('uploadPhoto', minImgFile);
           uploadImg({ formData });
-        }).catch((err) => {
+        }).catch((err: any) => {
           message.error('创建缩略图出错');
           console.log('创建缩略图出错', err);
         })

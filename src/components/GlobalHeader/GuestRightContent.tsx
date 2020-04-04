@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import { Link } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
@@ -20,6 +21,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
 
   return (
     <div className={className}>
+      <Link style={{ color: '#002140' }} to="/admin/login">管理员登录</Link>
       <SelectLang className={styles.action} />
     </div>
   );

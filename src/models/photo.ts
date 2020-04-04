@@ -6,7 +6,7 @@ import { queryList } from '@/services/photo';
 
 // state
 export interface PhotoModelState {
-  list?: Array<any>;
+  list: Array<any>;
 }
 
 // modeel
