@@ -32,11 +32,9 @@ class Photo extends React.Component<PhotoProps> {
     });
   };
 
-  handleCardClick = (imgInfo: PhotoInfo) => {
-    const { photo: { list } } = this.props;
-    const { classify } = imgInfo;
+  handleCardClick = (imgInfo: PhotoInfo, list: Array<PhotoInfo>) => {
     let defaultPage;
-    const set = list[classify].map((item: PhotoInfo, index: Number) => {
+    const set = list.map((item: PhotoInfo, index: Number) => {
       if (item.id === imgInfo.id) {
         defaultPage = index;
       }
@@ -71,7 +69,19 @@ class Photo extends React.Component<PhotoProps> {
               <Card loading={loading} title={key} key={key}>
                 {
                   photoClassify[key].map((imgInfo: PhotoInfo) => (
-                    <img src={imgInfo.minUrl} alt={imgInfo.title} onClick={this.handleCardClick.bind(this, imgInfo)} />
+                    <img
+                      title="点击查看大图"
+                      src={imgInfo.minUrl}
+                      alt={imgInfo.title}
+                      onClick={this.handleCardClick.bind(this, imgInfo, photoClassify[key])}
+                      style={{
+                        cursor: 'pointer',
+                        margin: '4px',
+                        padding: '4px',
+                        border: '1px solid #c0c0c0',
+                        borderRadius: '3px',
+                      }}
+                    />
                   ))
                 }
               </Card>

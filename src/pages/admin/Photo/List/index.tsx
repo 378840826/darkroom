@@ -58,7 +58,11 @@ const PhotoList: React.FC = () => {
       dataIndex: 'img',
       hideInSearch: true,
       render: (_, record) => (
-        <Tooltip title={<img src={record.url} />} mouseEnterDelay={0} mouseLeaveDelay={0}>
+        <Tooltip
+          title={<img src={record.url} style={{ width: '300px' }} />}
+          mouseEnterDelay={0}
+          mouseLeaveDelay={0}
+        >
           <div
             style={{
               minWidth: '75px',
