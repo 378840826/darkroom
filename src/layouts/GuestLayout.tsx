@@ -15,6 +15,7 @@ import { Dispatch } from 'redux';
 // import { connect } from 'dva';
 import RightContent from '@/components/GlobalHeader/GuestRightContent';
 import logo from '../assets/logo.svg';
+import L2Dwidget from '@/components/L2Dwidget';
 
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {
@@ -54,6 +55,7 @@ const footerRender = () => {
 };
 
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
+  L2Dwidget.init()
   const {
     dispatch,
   } = props;
