@@ -13,10 +13,9 @@ export async function switchArticleStatus(params: TableListItem) {
   });
 }
 
-
 export async function updateInfo(params: TableListItem) {
   return request(`/api/admin/blog/${params.id}`, {
-    params,
+    data: params,
     method: 'PUT',
   });
 }

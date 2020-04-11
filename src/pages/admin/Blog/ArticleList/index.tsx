@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { Modal, message, Button } from 'antd';
+import { ExclamationCircleOutlined, CheckCircleTwoTone } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { SorterResult } from 'antd/es/table/interface';
 import UpdateForm, { FormValueType } from './UpdateForm';
+import UpdateContent from './UpdateContent';
 import { TableListItem } from './data.d';
-import { Dispatch, AnyAction } from 'redux';
-import { BlogModelState } from '@/models/admin/blog';
 import { getList, switchArticleStatus, updateInfo } from './service'
 
 const handleSwitchStatus = (record: TableListItem, actionRef:any) => {
@@ -32,7 +32,8 @@ const handleSwitchStatus = (record: TableListItem, actionRef:any) => {
   });
 };
 
-const handleUpdate = async (fields: FormValueType) => {
+// 修改文章信息
+const handleUpdateInfo = async (fields: FormValueType) => {
   const hide = message.loading('正在修改');
   try {
     await updateInfo({
@@ -51,15 +52,29 @@ const handleUpdate = async (fields: FormValueType) => {
   }
 };
 
-interface BlogListProps {
-  dispatch: Dispatch<AnyAction>;
-  adminBlog: BlogModelState;
-}
+// 修改文章内容
+const handleUpdateContent = async (fields: Partial<TableListItem>) => {
+  const hide = message.loading('正在提交');
+  try {
+    await updateInfo({
+      id: fields.id,
+      content: fields.content,
+    });
+    hide();
+    message.success('修改成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('修改失败请重试！');
+    return false;
+  }
+};
 
-const BlogList: React.FC<BlogListProps> = () => {
+const BlogList: React.FC = () => {
   const [sorter, setSorter] = useState<string>('');
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [stepFormValues, setStepFormValues] = useState({});
+  const [updateContentVisible, handleUpdateContentVisible] = useState<boolean>(false);
+  const [infoFormValues, setInfoFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
     {
@@ -93,10 +108,11 @@ const BlogList: React.FC<BlogListProps> = () => {
       title: '状态',
       dataIndex: 'status',
       hideInForm: true,
-      valueEnum: {
-        hidden: { text: '隐藏' },
-        active: { text: '显示' },
-      },
+      render: value => (
+        value === 'hidden'
+        ?<ExclamationCircleOutlined style={{ color: "#faad14"}} />
+        :<CheckCircleTwoTone twoToneColor="#52c41a" />
+      ),
     },
     {
       title: '操作',
@@ -108,17 +124,28 @@ const BlogList: React.FC<BlogListProps> = () => {
             <a
               onClick={() => {
                 handleUpdateModalVisible(true);
-                setStepFormValues(record);
+                setInfoFormValues(record);
               }}
             >
-              修改
-          </a>
+              修改信息
+            </a>
+            <a
+              onClick={() => {
+                handleUpdateContentVisible(true);
+                setInfoFormValues(record);
+              }}
+            >
+              修改内容
+            </a>
             <Button
               type="link"
-              danger
               onClick={() => handleSwitchStatus(record, actionRef)}
             >
-              {record.status === 'active' ? '隐藏' : '显示'}
+              {
+                record.status === 'active'
+                ?<span style={{ color: '#faad14' }}>隐藏</span>
+                :<span style={{ color: '#52c41a' }}>显示</span>
+              }
           </Button>
           </>
         )
@@ -142,13 +169,13 @@ const BlogList: React.FC<BlogListProps> = () => {
         columns={columns}
         request={params => getList(params)}
       />
-      {stepFormValues && Object.keys(stepFormValues).length ? (
+      {infoFormValues && Object.keys(infoFormValues).length ? (
         <UpdateForm
           onSubmit={async value => {
-            const success = await handleUpdate(value);
+            const success = await handleUpdateInfo(value);
             if (success) {
               handleUpdateModalVisible(false)
-              setStepFormValues({});
+              setInfoFormValues({});
               if (actionRef.current) {
                 actionRef.current.reload();
               }
@@ -156,10 +183,30 @@ const BlogList: React.FC<BlogListProps> = () => {
           }}
           onCancel={() => {
             handleUpdateModalVisible(false);
-            setStepFormValues({});
+            setInfoFormValues({});
           }}
           updateModalVisible={updateModalVisible}
-          values={stepFormValues}
+          values={infoFormValues}
+        />
+      ) : null}
+
+      {updateContentVisible ? (
+        <UpdateContent
+          onSubmit={async value => {
+            const success = await handleUpdateContent(value);
+            if (success) {
+              handleUpdateContentVisible(false)
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }}
+          onCancel={() => {
+            console.log('取消');            
+            handleUpdateContentVisible(false);
+          }}
+          updateContentVisible={updateContentVisible}
+          articleInfo={infoFormValues}
         />
       ) : null}
     </PageHeaderWrapper>

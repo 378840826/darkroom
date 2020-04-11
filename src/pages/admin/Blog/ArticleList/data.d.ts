@@ -1,10 +1,11 @@
 export interface TableListItem {
-  id?: number;
+  id?: string;
   title?: string;
   author?: string;
   classify?: string;
   date?: string;
   status?: string;
+  content?: string;
 }
 
 export interface TableListPagination {

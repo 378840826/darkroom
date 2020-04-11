@@ -10,7 +10,7 @@ export interface FormValueType extends Partial<TableListItem> {
   classify?: string;
   title?: string;
   author?: string;
-  id?: number;
+  id?: string;
 }
 
 export interface UpdateFormProps {
